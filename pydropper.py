@@ -45,9 +45,6 @@ def start_listener():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 
-listener_thread = threading.Thread(target=start_listener)
-listener_thread.start()
-
 def main():
     global window, name_label, hex_label, hex_color
     window = tk.Tk()
@@ -62,6 +59,16 @@ def main():
     hex_label.pack(expand=True, fill='both', anchor='w')
     update_labels()  # Start updating the label
 
+    # Threading for user input
+    stop_event = threading.Event()
+    listener_thread = threading.Thread(target=start_listener, args=(stop_event,))
+    listener_thread.start()
+
+    def on_closing():
+        stop_event.set()  # close the listener_thread when the tkinter window is closed
+        window.destroy()
+
+    window.protocol("WM_DELETE_WINDOW", on_closing)
     window.mainloop()
 
 if __name__ == "__main__":

@@ -4,8 +4,11 @@ pillow==10.2.0
 PyAutoGUI==0.9.54
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
+pynput==1.7.6
 pyobjc-core==10.1
+pyobjc-framework-ApplicationServices==10.1
 pyobjc-framework-Cocoa==10.1
+pyobjc-framework-CoreText==10.1
 pyobjc-framework-Quartz==10.1
 pyperclip==1.8.2
 PyRect==0.2.0
@@ -13,4 +16,5 @@ PyScreeze==0.1.30
 pytweening==1.0.7
 rubicon-objc==0.4.7
 scipy==1.12.0
+six==1.16.0
 webcolors==1.13

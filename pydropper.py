@@ -1,10 +1,10 @@
 import pyautogui
 import tkinter as tk
 from scipy.spatial import KDTree
-from webcolors import (
-    CSS3_HEX_TO_NAMES,
-    hex_to_rgb,
-)
+from webcolors import (CSS3_HEX_TO_NAMES, hex_to_rgb)
+import pyperclip
+from pynput import keyboard
+import threading
 
 # initialize color data for convert_rgb_to_names
 names = []
@@ -28,15 +28,28 @@ def get_rgb_at_mouse():
     return r, g, b
 
 def update_labels():
+    global hex_color
     r, g, b = get_rgb_at_mouse()
     color_name = convert_rgb_to_names((r,g,b))
-    hex = rgb_to_hex(r,g,b)
+    hex_color = rgb_to_hex(r,g,b)
     name_label.config(text=color_name)
-    hex_label.config(text=hex)
+    hex_label.config(text=hex_color)
     window.after(10, update_labels)
 
+def on_press(key):
+    global hex_color
+    if key == keyboard.KeyCode.from_char('ç'):
+        pyperclip.copy(hex_color)
+
+def start_listener():
+    with keyboard.Listener(on_press=on_press) as listener:
+        listener.join()
+
+listener_thread = threading.Thread(target=start_listener)
+listener_thread.start()
+
 def main():
-    global window, name_label, hex_label
+    global window, name_label, hex_label, hex_color
     window = tk.Tk()
     window.title('')
     window.geometry("200x60")

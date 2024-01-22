@@ -1,4 +1,3 @@
-#!/usr/local/bin/python3.10
 import pyautogui
 import tkinter as tk
 from scipy.spatial import KDTree
@@ -7,16 +6,16 @@ from webcolors import (
     hex_to_rgb,
 )
 
-# https://medium.com/codex/rgb-to-color-names-in-python-the-robust-way-ec4a9d97a01f
+# initialize color data for convert_rgb_to_names
+names = []
+rgb_values = []
+for color_hex, color_name in CSS3_HEX_TO_NAMES.items():
+    names.append(color_name)
+    rgb_values.append(hex_to_rgb(color_hex))
+kdt_db = KDTree(rgb_values)
+
 def convert_rgb_to_names(rgb_tuple):
-    css3_db = CSS3_HEX_TO_NAMES
-    names = []
-    rgb_values = []
-    for color_hex, color_name in css3_db.items():
-        names.append(color_name)
-        rgb_values.append(hex_to_rgb(color_hex))
-    
-    kdt_db = KDTree(rgb_values)
+    # https://medium.com/codex/rgb-to-color-names-in-python-the-robust-way-ec4a9d97a01f
     distance, index = kdt_db.query(rgb_tuple)
     return names[index]
 
@@ -34,7 +33,7 @@ def update_labels():
     hex = rgb_to_hex(r,g,b)
     name_label.config(text=color_name)
     hex_label.config(text=hex)
-    window.after(100, update_labels)
+    window.after(10, update_labels)
 
 def main():
     global window, name_label, hex_label

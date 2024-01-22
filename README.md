@@ -1,6 +1,6 @@
 # Py-Dropper
 
-Py-Dropper is a Python script that displays the name of the color beneath your cursor. This tool may be useful for people with vision impairements, or for designers and developers who want a faster way to get hex color values.
+Py-Dropper is a Python script that displays the name of the color beneath your cursor. This tool may be useful for people with vision impairments, or for designers and developers who want a faster way to get hex color values.
 
 ## Setup
 
@@ -38,3 +38,5 @@ python3 /<path-to-your-repo>/pydropper/pydropper.py
 ```
 
 Where \<path-to-your-repo\> is the location that you installed the pydropper files.
+
+After saving, you should be able to run the script as an app. 

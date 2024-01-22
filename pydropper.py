@@ -41,7 +41,7 @@ def on_press(key):
     if key == keyboard.KeyCode.from_char('ç'):
         pyperclip.copy(hex_color)
 
-def start_listener():
+def start_listener(stop_event):
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 

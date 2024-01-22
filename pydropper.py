@@ -5,6 +5,7 @@ from webcolors import (CSS3_HEX_TO_NAMES, hex_to_rgb)
 import pyperclip
 from pynput import keyboard
 import threading
+import time
 
 # initialize color data for convert_rgb_to_names
 names = []
@@ -36,14 +37,17 @@ def update_labels():
     hex_label.config(text=hex_color)
     window.after(10, update_labels)
 
-def on_press(key):
-    global hex_color
-    if key == keyboard.KeyCode.from_char('ç'):
-        pyperclip.copy(hex_color)
+def keyboard_event_listener(stop_event):
+    def on_press(key):
+        if key == keyboard.KeyCode.from_char('ç'):
+            pyperclip.copy(hex_color)
 
-def start_listener(stop_event):
-    with keyboard.Listener(on_press=on_press) as listener:
-        listener.join()
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+    while not stop_event.is_set():
+        time.sleep(0.1)  # Check for the stop_event every 0.1 seconds
+
+    listener.stop()
 
 def main():
     global window, name_label, hex_label, hex_color
@@ -52,20 +56,24 @@ def main():
     window.geometry("200x60")
     window.attributes("-topmost", True)
     window.attributes("-alpha", 0.8)
+
     name_label = tk.Label(window, font=("Futura", "16", ""))
     name_label.pack(expand=True, fill='both', anchor='w')
-
     hex_label = tk.Label(window, font=("Futura", "16", ""))
     hex_label.pack(expand=True, fill='both', anchor='w')
-    update_labels()  # Start updating the label
 
-    # Threading for user input
+    # start window event loop
+    update_labels()
+
+    # start threading for user input
     stop_event = threading.Event()
-    listener_thread = threading.Thread(target=start_listener, args=(stop_event,))
+    listener_thread = threading.Thread(target=keyboard_event_listener, args=(stop_event,))
     listener_thread.start()
 
     def on_closing():
-        stop_event.set()  # close the listener_thread when the tkinter window is closed
+        # cleanup keyboard listener before closing window
+        stop_event.set()
+        listener_thread.join()
         window.destroy()
 
     window.protocol("WM_DELETE_WINDOW", on_closing)
